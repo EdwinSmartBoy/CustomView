@@ -91,6 +91,12 @@ class CanvasView : View {
         // canvas!!.drawRoundRect(100f, 100f, 800f, 400f, 12f, 12f, mPaint)
 
         // 绘制椭圆：
+        // canvas!!.drawOval(mRectF, mPaint)
+        // canvas!!.drawOval(100f, 100f, 800f, 400f, mPaint)
+
+        // 绘制圆：
+        // 绘制圆形也比较简单, 如下：
+        canvas!!.drawCircle(500f, 500f, 400f, mPaint)
     }
 
 }

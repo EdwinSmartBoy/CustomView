@@ -83,10 +83,14 @@ class CanvasView : View {
         // canvas!!.drawRect(mRect, mPaint)
         // canvas!!.drawRect(mRectF, mPaint)
 
-        //绘制圆角矩形：
-        //绘制圆角矩形也提供了两种重载方式，如下：
-        //float rx, float ry   圆角的
-        canvas!!.drawRoundRect(mRectF, 12f, 12f, mPaint)
+        // 绘制圆角矩形：
+        // 绘制圆角矩形也提供了两种重载方式，如下：
+        // float rx, float ry   椭圆的圆弧，这里的两个参数实际上是椭圆的两个半径
+        // canvas!!.drawRoundRect(mRectF, 12f, 12f, mPaint)
+        // API-21以后出现的
+        // canvas!!.drawRoundRect(100f, 100f, 800f, 400f, 12f, 12f, mPaint)
+
+        // 绘制椭圆：
     }
 
 }

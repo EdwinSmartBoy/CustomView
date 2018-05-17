@@ -23,14 +23,17 @@ class CanvasView : View {
      *
      * 坐标原点默认在左上角，水平向右为x轴增大方向，竖直向下为y轴增大方向。
      *
+     * 相关操作	 简要介绍
+     * save	     保存当前画布状态
+     * restore	 回滚到上一次保存的状态
+     * translate 相对于当前位置位移
+     * rotate	 旋转
+     *
      * 二.Canvas的常用操作速查表
      */
 
     // 1.创建一个画笔
     private val mPaint = Paint()
-
-    private val mRect = Rect(100, 100, 800, 400)
-    private val mRectF = RectF(100f, 100f, 800f, 400f)
 
     // 操作类型	相关API	备注
     // 绘制颜色	drawColor, drawRGB, drawARGB	使用单一颜色填充整个画布
@@ -43,6 +46,9 @@ class CanvasView : View {
     // 画布快照	save, restore, saveLayerXxx, restoreToCount, getSaveCount	依次为 保存当前状态、 回滚到上一次保存的状态、 保存图层状态、 回滚到指定状态、 获取保存次数
     // 画布变换	translate, scale, rotate, skew	依次为 位移、缩放、 旋转、错切
     // Matrix(矩阵)	getMatrix, setMatrix, concat	实际画布的位移，缩放等操作的都是图像矩阵Matrix，只不过Matrix比较难以理解和使用，故封装了一些常用的方法。
+
+    private val mRect = Rect(100, 100, 800, 400)
+    private val mRectF = RectF(100f, 100f, 800f, 400f)
 
     constructor(context: Context?) : this(context, null)
     constructor(context: Context?, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -96,7 +102,17 @@ class CanvasView : View {
 
         // 绘制圆：
         // 绘制圆形也比较简单, 如下：
-        canvas!!.drawCircle(500f, 500f, 400f, mPaint)
+        // canvas!!.drawCircle(500f, 500f, 400f, mPaint)
+
+        // 绘制圆弧：(startAngle， sweepAngel)的作用，就是确定角度的起始位置和扫过角度
+        // startAngle  // 开始角度
+        // sweepAngle  // 扫过角度
+        // useCenter   // 是否使用中心
+        // mPaint.color = Color.GRAY
+        // canvas!!.drawRect(mRectF, mPaint)
+        // mPaint.color = Color.BLUE
+        // canvas.drawArc(mRectF, 0f, 90f, true, mPaint)
+
     }
 
 }

@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.superlink.customview.custom.PaintView
+    <com.superlink.customview.sample.sector.PieView
+        android:id="@+id/pieView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="Hello World!"/>

@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
-import com.superlink.customview.view.SectorData
 
 /**
  * 创建者      Created by Edwin

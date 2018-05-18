@@ -112,7 +112,6 @@ class CanvasView : View {
         // canvas!!.drawRect(mRectF, mPaint)
         // mPaint.color = Color.BLUE
         // canvas.drawArc(mRectF, 0f, 90f, true, mPaint)
-
     }
 
 }

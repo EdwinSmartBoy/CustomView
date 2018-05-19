@@ -2,6 +2,7 @@ package com.superlink.customview.custom
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
@@ -56,7 +57,9 @@ class CanvasOperaView : View {
     }
 
     private fun initialPaint() {
-
+        mPaint.color = Color.BLACK
+        mPaint.strokeWidth = 6f
+        mPaint.style = Paint.Style.STROKE
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -74,7 +77,7 @@ class CanvasOperaView : View {
          * canvas!!.translate(200f, 200f)
          * canvas.drawCircle(0f, 0f, 100f, mPaint)
          * mPaint.color = Color.BLUE
-         * canvas.translate(200f, 2     00f)
+         * canvas.translate(200f, 200f)
          * canvas.drawCircle(0f, 0f, 100f, mPaint)
          */
 
@@ -97,7 +100,7 @@ class CanvasOperaView : View {
          */
 
         // 将坐标系原点移动到画布正中心
-        //canvas!!.translate(mWidth / 2f, mHeight / 2f)
+        canvas!!.translate(mWidth / 2f, mHeight / 2f)
         //mRectF.left = 0f
         //mRectF.top = -400f
         //mRectF.right = 400f
@@ -117,17 +120,135 @@ class CanvasOperaView : View {
         //canvas.drawRect(mRectF, mPaint)
 
         // 将坐标系原点移动到画布正中心
-        canvas!!.translate(mWidth / 2f, mHeight / 2f)
-        mRectF.left = -400f
-        mRectF.top = -400f
-        mRectF.right = 400f
-        mRectF.bottom = 400f
+        //canvas!!.translate(mWidth / 2f, mHeight / 2f)
+        //mRectF.left = -400f
+        //mRectF.top = -400f
+        //mRectF.right = 400f
+        //mRectF.bottom = 400f
 
-        mPaint.style = Paint.Style.STROKE
-        mPaint.strokeWidth = 24f
-        for (index in 0 until 20) {
-            canvas.scale(0.9f, 0.9f)
-            canvas.drawRect(mRectF, mPaint)
-        }
+        //mPaint.style = Paint.Style.STROKE
+        //mPaint.strokeWidth = 24f
+        //for (index in 0 until 24) {
+        //    canvas.scale(0.9f, 0.9f)
+        //    //同心圆
+        //    //canvas.drawCircle(0f, 0f, 480f, mPaint)
+        //    // 同心矩形
+        //    canvas.drawRect(mRectF, mPaint)
+        //}
+
+        /**
+         * ⑶旋转(rotate)
+         * 旋转提供了两种方法：
+         *
+         * public void rotate (float degrees)
+         * public final void rotate (float degrees, float px, float py)
+         *
+         * px py 控制旋转中心点的
+         */
+
+        //mRectF.left = 0f
+        //mRectF.top = -400f
+        //mRectF.right = 400f
+        //mRectF.bottom = 0f
+
+        //canvas.drawRect(mRectF, mPaint)
+        // 旋转180度
+        // canvas.rotate(180f)
+        // 旋转180度  再将旋转中心平移200f
+        //canvas.rotate(180f, 200f, 0f)
+        //mPaint.color = Color.BLUE
+        //canvas.drawRect(mRectF, mPaint)
+
+        //canvas.drawCircle(0f, 0f, 400f, mPaint)
+        //canvas.drawCircle(0f, 0f, 380f, mPaint)
+        //for (angle in 0 until 360 step 10) {
+        //    canvas.drawLine(0f, 380f, 0f, 400f, mPaint)
+        //    canvas.rotate(10f)
+        //}
+
+        /**
+         * ⑷错切(skew)
+         *
+         * skew这里翻译为错切，错切是特殊类型的线性变换。
+
+         * 错切只提供了一种方法：
+         *
+         * public void skew (float sx, float sy)
+         *
+         * 参数含义：
+         * float sx:将画布在x方向上倾斜相应的角度，sx倾斜角度的tan值，
+         * float sy:将画布在y轴方向上倾斜相应的角度，sy为倾斜角度的tan值.
+         *
+         * 变换后:
+
+         * X = x + sx * y
+         * Y = sy * x + y
+         */
+        //mRectF.left = 0f
+        //mRectF.top = 0f
+        //mRectF.right = 200f
+        //mRectF.bottom = 200f
+
+        //canvas.drawRect(mRectF, mPaint)
+        // 错切   sx与sy为倾斜角度的tan值
+        // 错切也是可叠加的，不过请注意，调用次序不同绘制结果也会不同
+        // 水平错切
+        //canvas.skew(1f, 0f)
+        // 垂直错切
+        //canvas.skew(0f, 1f)
+
+        //mPaint.color = Color.BLUE
+        //canvas.drawRect(mRectF, mPaint)
+
+        /**
+         * ⑸快照(save)和回滚(restore)
+         *
+         * 相关API	      简介
+         * save	          把当前的画布的状态进行保存，然后放入特定的栈中
+         * saveLayerXxx	  新建一个图层，并放入特定的栈中
+         * restore	      把栈中最顶层的画布状态取出来，并按照这个状态恢复当前的画布
+         * restoreToCount 弹出指定位置及其以上所有的状态，并按照指定位置的状态进行恢复
+         * getSaveCount	  获取栈中内容的数量(即保存次数)
+         *
+         * save
+         * save 有两种方法：
+         *
+         * 保存全部状态
+         * public int save ()
+         * 根据saveFlags参数保存一部分状态
+         * public int save (int saveFlags)
+         *
+         * 每调用一次save方法，都会在状态栈（暂且叫这个）顶添加一条状态信息，
+         *
+         * 数据类型	名称	简介
+         * int	    ALL_SAVE_FLAG	            默认，保存全部状态
+         * int	    CLIP_SAVE_FLAG	            保存剪辑区
+         * int	    CLIP_TO_LAYER_SAVE_FLAG	    剪裁区作为图层保存
+         * int	    FULL_COLOR_LAYER_SAVE_FLAG  保存图层的全部色彩通道
+         * int	    HAS_ALPHA_LAYER_SAVE_FLAG	保存图层的alpha(不透明度)通道
+         * int	    MATRIX_SAVE_FLAG	        保存Matrix信息(translate, rotate, scale, skew)
+         *
+         * 注意：saveLayerXxx方法会让你花费更多的时间去渲染图像(图层多了相互之间叠加会导致计算量成倍增长)，使用前请谨慎，如果可能，尽量避免使用。
+         * 使用saveLayerXxx方法，也会将图层状态也放入状态栈中，同样使用restore方法进行恢复。
+         *
+         * restore
+         * 状态回滚，就是从栈顶取出一个状态然后根据内容进行恢复。
+         *
+         * restoreToCount
+         * 弹出指定位置以及以上所有状态，并根据指定位置状态进行恢复。
+         *
+         * getSaveCount
+         * 获取保存的次数，即状态栈中保存状态的数量
+         *
+         * 常用格式
+         * 虽然关于状态的保存和回滚啰嗦了不少，不过大多数情况下只需要记住下面的步骤就可以了：
+         *
+         * save();      //保存状态
+         * ...          //具体操作
+         * restore();   //回滚到之前的状态
+         *
+         * 这种方式也是最简单和最容易理解的使用方法。
+         */
+
     }
 }

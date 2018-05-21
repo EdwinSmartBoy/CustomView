@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.superlink.customview.custom.PathBasicView
+    <com.superlink.customview.sample.radar.RadarView
         android:id="@+id/checkView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

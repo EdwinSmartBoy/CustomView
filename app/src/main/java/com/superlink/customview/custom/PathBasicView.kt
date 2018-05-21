@@ -1,10 +1,7 @@
 package com.superlink.customview.custom
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Path
+import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
 
@@ -24,7 +21,11 @@ class PathBasicView : View {
      */
 
     private val mPaint: Paint = Paint()
+
     private val mPath: Path = Path()
+    private val mSrcPath: Path = Path()
+
+    private val mRectF: RectF = RectF()
 
     private var mWidth: Int = 0
     private var mHeight: Int = 0
@@ -109,11 +110,104 @@ class PathBasicView : View {
          * CW	clockwise	      顺时针 在添加图形时确定闭合顺序(各个点的记录顺序)
          * CCW	counter-clockwise 逆时针 对图形的渲染结果有影响(是判断图形渲染的重要条件)
          */
-        //mPath.addRect(-200f, -200f, 200f, 200f, Path.Direction.CW)
+        // mPath.addRect(-200f, -200f, 200f, 200f, Path.Direction.CW)
+        // canvas.drawPath(mPath, mPaint)
+
+        // mPath.addRect(-200f, -200f, 200f, 200f, Path.Direction.CCW)
+        // mPath.setLastPoint(-300f, 300f)
+        // canvas.drawPath(mPath, mPaint)
+
+        /**
+         * 第二类(Path)
+         *
+         * 将两个Path合并成为一个。
+         * public void addPath (Path src)
+         *
+         * 将src进行了位移之后再添加进当前path中。
+         * public void addPath (Path src, float dx, float dy)
+         *
+         * 将src添加到当前path之前先使用Matrix进行变换。
+         * public void addPath (Path src, Matrix matrix)
+         */
+        // canvas.scale(1f, -1f)
+        // mPath.addRect(-200f, -200f, 200f, 200f, Path.Direction.CW)
+        // mSrcPath.addCircle(0f, 0f, 100f, Path.Direction.CW)
+        // //进行第二种变换
+        // mPath.addPath(mSrcPath, 0f, 200f)
+        // // 新建的两个Path(矩形和圆形)中心都是坐标原点，我们在将包含圆形的path添加到包含矩形的path之前将其进行移动了一段距离
+        // canvas.drawPath(mPath, mPaint)
+
+        /**
+         * 第三类(addArc与arcTo)
+         *
+         * addArc
+         * public void addArc (RectF oval, float startAngle, float sweepAngle)
+         *
+         * arcTo
+         * public void arcTo (RectF oval, float startAngle, float sweepAngle)
+         * public void arcTo (RectF oval, float startAngle, float sweepAngle, boolean forceMoveTo)
+         *
+         * forceMoveTo是什么作用呢？
+         *
+         * forceMoveTo	含义	                                                等价方法
+         * true	        将最后一个点移动到圆弧起点，即不连接最后一个点与圆弧起点	public void addArc (RectF oval, float startAngle, float sweepAngle)
+         * false	    不移动，而是连接最后一个点与圆弧起点	                public void arcTo (RectF oval, float startAngle, float sweepAngle)
+         *
+         * 名称	    作用                	区别
+         * addArc	添加一个圆弧到path	直接添加一个圆弧到path中
+         * arcTo	添加一个圆弧到path	添加一个圆弧到path，如果圆弧的起点和上次最后一个坐标点不相同，就连接两个点
+         */
+        // canvas.scale(1f, -1f)
+        // mPath.lineTo(100f, 100f)
+
+        // mRectF.left = 0f
+        // mRectF.top = 0f
+        // mRectF.right = 300f
+        // mRectF.bottom = 300f
+
+        // 当forceMoveTo为true时，如下两个方法等价
+        //mPath.addArc(mRectF, 0f, 270f)
+        //等价于该方法 mPath.arcTo(mRectF, 0f, 270f, true)
+
+        // 当forceMoveTo为false时，如下两个方法等价
+        //mPath.arcTo(mRectF, 0f, 270f, false)
+        //等价于该方法 mPath.arcTo(mRectF, 0f, 270f)
+
         //canvas.drawPath(mPath, mPaint)
 
-        mPath.addRect(-200f, -200f, 200f, 200f, Path.Direction.CCW)
-        mPath.setLastPoint(-300f, 300f)
+        /**
+         * 第3组：isEmpty、 isRect、isConvex、 set 和 offset
+         */
+
+        // public boolean isEmpty () 判断path中是否包含内容
+        // println("Path isEmpty = ${mPath.isEmpty}")
+        // mPath.lineTo(100f, 100f)
+        // println("Path isEmpty = ${mPath.isEmpty}")
+
+        // public boolean isRect (RectF rect) 判断path是否是一个矩形，如果是一个矩形的话，会将矩形的信息存放进参数rect中。
+        // mPath.lineTo(0f, 400f)
+        // mPath.lineTo(400f, 400f)
+        // mPath.lineTo(400f, 0f)
+        // mPath.lineTo(0f, 0f)
+
+        // val isRect = mPath.isRect(mRectF)
+        // println("isRect = $isRect, left = ${mRectF.left}, top = ${mRectF.top}, right = ${mRectF.right}, bottom = ${mRectF.bottom}")
+
+        // public void set (Path src) 将新的path赋值到现有path。
+        canvas.scale(1f, -1f)
+
+        mPath.addRect(-200f, -200f, 200f, 200f, Path.Direction.CW)
+        mSrcPath.addCircle(0f, 0f, 100f, Path.Direction.CW)
+
+        mPath.set(mSrcPath)
+
         canvas.drawPath(mPath, mPaint)
+
+        // public void offset (float dx, float dy)
+        // public void offset (float dx, float dy, Path dst)
+
+        // dst状态	      效果
+        // dst不为空	      将当前path平移后的状态存入dst中，不会影响当前path
+        // dst为空(null)	  平移将作用于当前path，相当于第一种方法
     }
 }

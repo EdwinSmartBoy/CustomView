@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
 import android.view.View
+import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.sin
@@ -77,15 +78,19 @@ class RadarView : View {
     private fun initialPaint() {
         //线条画笔
         mRadarPaint.color = Color.GRAY
+        mRadarPaint.isAntiAlias = true
         mRadarPaint.style = Paint.Style.STROKE
         mRadarPaint.strokeWidth = 4f
 
         //数据区
         mDataPaint.color = Color.BLUE
+        mDataPaint.isAntiAlias = true
         mDataPaint.style = Paint.Style.FILL
 
         //文本
+        mTextPaint.textSize = 42f
         mTextPaint.color = Color.RED
+        mTextPaint.isAntiAlias = true
         mTextPaint.style = Paint.Style.FILL
     }
 
@@ -103,6 +108,36 @@ class RadarView : View {
         drawPolygon(canvas)
         //绘制从中心到末端的直线
         drawLines(canvas)
+        //绘制各个末端的文本数据
+        drawTexts(canvas)
+    }
+
+    /**
+     * 绘制各个末端的文本数据
+     */
+    private fun drawTexts(canvas: Canvas) {
+        val fontMetrics = mTextPaint.fontMetrics
+        //获取文本高度
+        val fontHeight: Float = fontMetrics.descent - fontMetrics.ascent
+        for (index: Int in 0 until mDefaultCount) {
+            val tempX = (mMaxRadius + fontHeight / 2) * cos(angle * index)
+            val tempY = (mMaxRadius + fontHeight / 2) * sin(angle * index)
+            if (angle * index >= 0 && angle * index < PI / 2) {
+                //第四象限
+                canvas.drawText(mDefTitle[index], tempX, tempY, mTextPaint)
+            } else if (angle * index >= 3 * PI / 2 && angle * index < PI * 2) {
+                //第三象限
+                canvas.drawText(mDefTitle[index], tempX, tempY, mTextPaint)
+            } else if (angle * index > PI / 2 && angle * index <= PI) {
+                //第二象限
+                val dis = mTextPaint.measureText(mDefTitle[index])//文本长度
+                canvas.drawText(mDefTitle[index], tempX - dis, tempY, mTextPaint)
+            } else if (angle * index >= Math.PI && angle * index < 3 * Math.PI / 2) {
+                //第1象限
+                val dis = mTextPaint.measureText(mDefTitle[index])//文本长度
+                canvas.drawText(mDefTitle[index], tempX - dis, tempY, mTextPaint)
+            }
+        }
     }
 
     //绘制中心到末端的直线

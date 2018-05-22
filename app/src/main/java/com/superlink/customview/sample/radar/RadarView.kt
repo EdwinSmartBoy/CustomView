@@ -26,12 +26,12 @@ class RadarView : View {
     /**
      * 默认的雷达层数
      */
-    private val mDefaultCount = 6
+    private var mDefaultCount = 8
 
     /**
      * 默认的每个扇形的角度
      */
-    private var angle = (Math.PI * 2 / mDefaultCount).toFloat()
+    private var angle = 0f
 
     /**
      * 网格最大半径
@@ -45,16 +45,16 @@ class RadarView : View {
     /**
      * 默认的标题栏
      */
-    private var mDefTitle: Array<String> = arrayOf("a", "b", "c", "d", "e", "f")
+    private var mDefTitle: Array<String> = arrayOf("a", "b", "c", "d", "e", "f", "g", "h")
     /**
      * 各维度分值
      */
-    private var data = doubleArrayOf(100.0, 60.0, 60.0, 60.0, 100.0, 50.0, 10.0, 20.0)
+    private var mDefaultData = floatArrayOf(90f, 68f, 72f, 69.5f, 96f, 64f, 51.5f, 62.4f)
 
     /**
      * 默认最大值
      */
-    private var mMaxValue: Int = 100
+    private var mMaxValue: Float = 100f
 
     //线条的画笔
     private val mRadarPaint: Paint = Paint()
@@ -77,10 +77,10 @@ class RadarView : View {
      */
     private fun initialPaint() {
         //线条画笔
-        mRadarPaint.color = Color.GRAY
+        mRadarPaint.color = Color.BLACK
         mRadarPaint.isAntiAlias = true
         mRadarPaint.style = Paint.Style.STROKE
-        mRadarPaint.strokeWidth = 4f
+        mRadarPaint.strokeWidth = 2f
 
         //数据区
         mDataPaint.color = Color.BLUE
@@ -89,7 +89,7 @@ class RadarView : View {
 
         //文本
         mTextPaint.textSize = 42f
-        mTextPaint.color = Color.RED
+        mTextPaint.color = Color.GRAY
         mTextPaint.isAntiAlias = true
         mTextPaint.style = Paint.Style.FILL
     }
@@ -104,12 +104,43 @@ class RadarView : View {
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         canvas!!.translate(mCenterWidth, mCenterHeight)
+        //设置每个角度的值
+        angle = (Math.PI * 2 / mDefaultCount).toFloat()
         //绘制网格线
         drawPolygon(canvas)
         //绘制从中心到末端的直线
         drawLines(canvas)
         //绘制各个末端的文本数据
         drawTexts(canvas)
+        //绘制覆盖区域
+        drawRegion(canvas)
+    }
+
+    /**
+     * 绘制覆盖区域
+     */
+    private fun drawRegion(canvas: Canvas) {
+        mDataPaint.alpha = 255
+        for (index in 0 until mDefaultCount) {
+            val percent = mDefaultData[index] / mMaxValue
+            val tempX = mMaxRadius * cos(angle * index) * percent
+            val tempY = mMaxRadius * sin(angle * index) * percent
+            if (index == 0) {
+                mDrawPath.moveTo(tempX, 0f)
+            } else {
+                mDrawPath.lineTo(tempX, tempY)
+            }
+            canvas.drawCircle(tempX, tempY, 10f, mDataPaint)
+        }
+        //绘制边界线条
+        mDataPaint.style = Paint.Style.STROKE
+        //闭合线条
+        mDrawPath.close()
+        canvas.drawPath(mDrawPath, mDataPaint)
+        //绘制填充区
+        mDataPaint.alpha = 127
+        mDataPaint.style = Paint.Style.FILL_AND_STROKE
+        canvas.drawPath(mDrawPath, mDataPaint)
     }
 
     /**
@@ -182,4 +213,93 @@ class RadarView : View {
         }
     }
 
+    /*------------------------------------------- 对外公开的方法 --------------------------------------------*/
+
+    /**
+     * 设置数据
+     *
+     * @param data 数据的数组
+     */
+    fun setData(data: FloatArray) {
+        if (data.size > mDefTitle.size) {
+            this.mDefaultCount = mDefTitle.size
+        } else {
+            this.mDefaultCount = data.size
+        }
+        this.mDefaultData = data
+        postInvalidate()
+    }
+
+    /**
+     * 设置数据
+     *
+     * @param data 数据List
+     */
+    fun setData(data: List<Float>) {
+        if (data.size > mDefTitle.size) {
+            this.mDefaultCount = mDefTitle.size
+        } else {
+            this.mDefaultCount = data.size
+        }
+        this.mDefaultData = data.toFloatArray()
+        postInvalidate()
+    }
+
+    /**
+     * 设置标题
+     */
+    fun setTitle(data: Array<String>) {
+        if (data.size > mDefaultData.size) {
+            this.mDefaultCount = mDefaultData.size
+        } else {
+            this.mDefaultCount = data.size
+        }
+        this.mDefTitle = data
+        postInvalidate()
+    }
+
+    /**
+     * 设置标题
+     */
+    fun setTitle(data: List<String>) {
+        if (data.size > mDefaultData.size) {
+            this.mDefaultCount = mDefaultData.size
+        } else {
+            this.mDefaultCount = data.size
+        }
+        this.mDefTitle = data.toTypedArray()
+        postInvalidate()
+    }
+
+    /**
+     * 设置Value的最大值
+     */
+    fun setMaxValue(maxValue: Float) {
+        this.mMaxValue = maxValue
+        postInvalidate()
+    }
+
+    /**
+     * 设置雷达的线条颜色
+     */
+    fun setLineColor(color: Int) {
+        this.mRadarPaint.color = color
+        postInvalidate()
+    }
+
+    /**
+     * 设置表示点和覆盖区的颜色
+     */
+    fun setRegionColor(color: Int) {
+        this.mDataPaint.color = color
+        postInvalidate()
+    }
+
+    /**
+     * 设置文本颜色
+     */
+    fun setTextColor(color: Int) {
+        this.mTextPaint.color = color
+        postInvalidate()
+    }
 }

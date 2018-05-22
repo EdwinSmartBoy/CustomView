@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <com.superlink.customview.sample.radar.RadarView
-        android:id="@+id/checkView"
+        android:id="@+id/radarView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="Hello World!"/>

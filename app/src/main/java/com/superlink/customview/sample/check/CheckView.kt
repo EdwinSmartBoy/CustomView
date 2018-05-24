@@ -28,7 +28,7 @@ class CheckView : View {
         private const val ANIM_UNCHECK = 2      //动画状态-结束
     }
 
-    private val TAG = CheckView.Companion.javaClass.canonicalName
+    private val TAG = CheckView.javaClass.canonicalName
 
     private var mWidth: Int = 0
     private var mHeight: Int = 0  // 宽高

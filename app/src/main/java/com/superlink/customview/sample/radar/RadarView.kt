@@ -38,7 +38,9 @@ class RadarView : View {
      */
     private var mMaxRadius: Float = 0.0f
 
-    //画布的中心点
+    /**
+     * 画布的中心点
+     */
     private var mCenterWidth: Float = 0f
     private var mCenterHeight: Float = 0f
 
@@ -98,7 +100,7 @@ class RadarView : View {
         super.onSizeChanged(w, h, oldw, oldh)
         this.mCenterWidth = w / 2f
         this.mCenterHeight = h / 2f
-        this.mMaxRadius = min(w, h) / 2 * 0.9f
+        this.mMaxRadius = min(mCenterWidth, mCenterHeight) * 0.9f
     }
 
     override fun onDraw(canvas: Canvas?) {

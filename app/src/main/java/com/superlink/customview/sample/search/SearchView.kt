@@ -78,7 +78,7 @@ class SearchView : View, AnimatorUpdateListener, AnimatorListener {
 
         mHandler.postDelayed({
             this.mCurrentState = State.STARTING
-            //延迟五秒执行动画
+            //延迟五百毫秒执行动画
             mStartingAnimator.start()
         }, 500)
     }

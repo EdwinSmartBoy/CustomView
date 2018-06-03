@@ -1,13 +1,22 @@
 package com.superlink.customview
 
+import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import com.superlink.customview.sample.elastic.ElasticCircleView
+import com.superlink.customview.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+    private lateinit var mainBinding: ActivityMainBinding
+
+    override fun onBindView() {
+        mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+    }
+
+    override fun initial(savedInstanceState: Bundle?) {
+
+    }
+
+    override fun onLoadData() {
+
     }
 }
